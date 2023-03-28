@@ -11,11 +11,11 @@ const linkList = [
     },
     {
         display: 'Mis películas',
-        path: '/movie'
+        path: '/mis-pelis'
     },
     {
         display: 'Configuración',
-        path: '/tv'
+        path: '/config'
     }
 ];
 
