@@ -24,8 +24,10 @@ const Nav = () => {
 
     const active = linkList.findIndex(e => e.path === pathname);
 
+    const isLogin = window.location.pathname === "/login"
+
     return ( 
-        <div className="header">
+        <div className={isLogin ? "invis" : "none"}>
             <div className="header_wrap">
                 <div className="logo">
                     <label className='linkChiquito'>{localStorage.getItem("username")}</label>
@@ -42,7 +44,7 @@ const Nav = () => {
                     }
                 </ul>
                 <div className="logo">
-                    <Link to="/login" className='linkChiquito' onClick={() => alert("Quitando info")}>Log out</Link>
+                    <Link to="/login" className='linkChiquito' onClick={() => localStorage.removeItem("username")}>Log out</Link>
                 </div>
             </div>
             
