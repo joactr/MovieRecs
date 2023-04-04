@@ -24,10 +24,10 @@ const Nav = () => {
 
     const active = linkList.findIndex(e => e.path === pathname);
 
-    const isLogin = window.location.pathname === "/login"
+    const isLogin = window.location.pathname === "/login" || window.location.pathname === "/registro"
 
     return ( 
-        <div className={isLogin ? "invis" : "none"}>
+        <div className={isLogin ? "invis" : "header"}>
             <div className="header_wrap">
                 <div className="logo">
                     <label className='linkChiquito'>{localStorage.getItem("username")}</label>

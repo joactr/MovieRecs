@@ -4,8 +4,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,7 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { green, purple } from '@mui/material/colors';
+import collage from './fondoLogin.jpg'
 
 const theme = createTheme({
     palette: {
@@ -47,16 +45,19 @@ export default function SignIn() {
   };
 
     return (
-        <div style={{ width: "100%", height: "100%", backgroundColor: "#0C2D48", top: "0", position:"absolute"}}>
+    <div style={{ width: "100%", height: "100%", backgroundColor: "#0C2D48", top: "0", position:"absolute", backgroundImage:`url(${collage})`}}>
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
+            padding: "20px",
+            borderRadius: "30px",
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            backgroundColor: "#0C2D48"
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
@@ -99,14 +100,9 @@ export default function SignIn() {
               Entrar
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link href="/registro" variant="body2">
+                  {"¿No tienes cuenta?"}
                 </Link>
               </Grid>
             </Grid>

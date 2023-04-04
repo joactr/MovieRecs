@@ -6,7 +6,7 @@ const axiosClient = axios.create({
     headers: {
         'Content-Type': 'application/json'
     },
-    paramsSerializer: params => queryString.stringify({...params, api_key: "1e11e7d4c5f3aad6e459fc0f63bfb0f5"})
+    params: {api_key: "1e11e7d4c5f3aad6e459fc0f63bfb0f5"}
 });
 
 axiosClient.interceptors.request.use(async (config) => config);
@@ -22,13 +22,13 @@ axiosClient.interceptors.response.use((response) => {
 });
 
 const tmdbApi = {
-    getVideos: (cate, id) => {
+    getVideos: (id) => {
         const url = 'movie/' + id + '/videos';
         return axiosClient.get(url, {params: {}});
     },
-    detail: (cate, id, params) => {
+    detail: async (id, params) => {
         const url = 'movie/' + id;
-        return axiosClient.get(url, params);
+        return await axiosClient.get(url, params);
     },
     credits: (cate, id) => {
         const url = 'movie/' + id + '/credits';

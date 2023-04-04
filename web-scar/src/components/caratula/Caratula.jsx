@@ -1,25 +1,29 @@
-import React from 'react';
-
+import {React,useEffect,useState} from 'react';
 import './caratula.scss';
-
 import { Link } from 'react-router-dom';
-
-import apiConfig from '../../apiRequests';
+import tmdbApi from '../../apiRequests';
 
 const Caratula = props => {
 
-    const item = props.item;
-    
-    const imgChiquita = "https://image.tmdb.org/t/p/original/" + item.poster_path
-    const imgGrande = "https://image.tmdb.org/t/p/w500/" + item.backdrop_path
+    const[idPeli,setIdPeli] = useState(-1)
+    const[datosPeli,setDatosPeli] = useState({poster_path:null})
 
-    const link = '/pelicula/' + item.id;
+    useEffect(()=>{
+        if(props.item !== -1)
+            tmdbApi.detail(props.item).then((e)=>setDatosPeli(e))
+    },[props.item])
+
+    
+    const imgChiquita = ("https://image.tmdb.org/t/p/original" + datosPeli.poster_path) || "https://image.tmdb.org/t/p/original"
+    const imgGrande = "https://image.tmdb.org/t/p/w500" + datosPeli.backdrop_path
+
+    const link = '/pelicula/' + props.item;
 
     return (
         <Link to={link} className="movie-container">
-            <div className="movie-card" style={{backgroundImage: `url(${imgGrande})`}}>
+            <div className="movie-card" style={{backgroundImage: `url(${imgChiquita})`}}>
             </div>
-            <h3>{item.title || item.name}</h3>
+            <h5>{datosPeli.title || datosPeli.name}</h5>
         </Link>
     );
 }
