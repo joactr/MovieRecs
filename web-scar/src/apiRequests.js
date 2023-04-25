@@ -21,6 +21,7 @@ axiosClient.interceptors.response.use((response) => {
     throw error;
 });
 
+
 const tmdbApi = {
     getVideos: (id) => {
         const url = 'movie/' + id + '/videos';
@@ -30,11 +31,11 @@ const tmdbApi = {
         const url = 'movie/' + id;
         return await axiosClient.get(url, params);
     },
-    credits: (cate, id) => {
+    credits: (id) => {
         const url = 'movie/' + id + '/credits';
         return axiosClient.get(url, {params: {}});
     },
-    similar: (cate, id) => {
+    similar: (id) => {
         const url = 'movie/' + id + '/similar';
         return axiosClient.get(url, {params: {}});
     },

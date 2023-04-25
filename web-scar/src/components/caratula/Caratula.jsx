@@ -14,14 +14,14 @@ const Caratula = props => {
     },[props.item])
 
     
-    const imgChiquita = ("https://image.tmdb.org/t/p/original" + datosPeli.poster_path) || "https://image.tmdb.org/t/p/original"
+    const imgChiquita = ("https://image.tmdb.org/t/p/w300" + datosPeli.poster_path) || "https://image.tmdb.org/t/p/w500"
     const imgGrande = "https://image.tmdb.org/t/p/w500" + datosPeli.backdrop_path
 
     const link = '/pelicula/' + props.item;
 
     return (
         <Link to={link} className="movie-container">
-            <div className="movie-card" style={{backgroundImage: `url(${imgChiquita})`}}>
+            <div className="movie-card" style={{backgroundImage: `url(${imgChiquita || imgGrande})`}}>
             </div>
             <h5>{datosPeli.title || datosPeli.name}</h5>
         </Link>
