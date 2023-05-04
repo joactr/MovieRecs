@@ -73,10 +73,31 @@
         .calificaciones {
             display: flex;
             flex-direction: row;
+            align-items: center;
         }
     }
 }
 
+.botonDescargar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border: 2px solid $white;
+        border-radius: $border-radius;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: orangered;
+        transition: transform 0.3s;
+    &__text{
+        color: $txt-color;
+    }
+}
+
+.botonDescargar:hover {
+    transform: scale(1.3);
+    cursor: pointer;
+}
 
 .casts {
     display: grid;
