@@ -1,0 +1,22 @@
+
+.columnRatings{
+    display: flex;
+    flex-direction: column;
+}
+
+.ratingsContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.registroContainer{
+    margin: auto;
+    margin-right: 35rem;
+    width: 40%;
+    border: 3px solid green;
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

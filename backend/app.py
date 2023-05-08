@@ -3,6 +3,7 @@ import flask
 import json
 from flask_cors import CORS
 import random
+from recomendador import Recomendador
 
 
 app = Flask(__name__)
