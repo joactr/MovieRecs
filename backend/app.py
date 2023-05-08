@@ -4,6 +4,7 @@ import json
 from flask_cors import CORS
 import random
 from py1337x import py1337x
+from recomendador import Recomendador
 
 
 torrents = py1337x(proxy='1337x.to', cache='py1337xCache', cacheTime=500)

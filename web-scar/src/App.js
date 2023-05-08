@@ -5,6 +5,7 @@ import Login from './components/login/Login';
 import PrivateRoutes from './components/privateRoute/PrivateRoutes';
 import DetallesPeli from './components/detallesPeli/DetallesPeli';
 import Config from './components/config/Config';
+import Registro from './components/registro/Registro'
 import { createBrowserRouter, Route, Router, BrowserRouter, RouterProvider, Routes } from "react-router-dom";
 
 
@@ -27,7 +28,8 @@ function App() {
             <Route path='/pelicula/:id' element={<DetallesPeli />} />
             <Route path='/config' element={<Config />} />
           </Route>
-          <Route path='/login' element={<Login/>} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/registro' element={<Registro/>} />
         </Routes>
       </BrowserRouter>
     </div>
