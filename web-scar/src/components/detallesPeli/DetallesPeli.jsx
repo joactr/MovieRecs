@@ -8,7 +8,7 @@ import rotten from './Rotten_Tomatoes.png';
 import imdbLogo from './imdb.png';
 import metacriticLogo from './Metacritic.png';
 import DownloadIcon from '@mui/icons-material/Download';
-
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 
 
 
@@ -16,8 +16,8 @@ const DetallesPeli = () => {
 
     const [datosPeli, setDatosPeli] = useState(null);
     const [datosomdb,setDatosomdb] = useState(null);
-    const [rottenRating,setRottenRating] = useState(null);
     const [downloadMagnet, setDownloadMagnet] = useState(null);
+    const [trailerLink, setTrailerLink] = useState(null);
 
     const {id} = useParams();
 
@@ -31,7 +31,13 @@ const DetallesPeli = () => {
             console.log(responseDetails)
             window.scrollTo(0,0);
         }
+
+        const getTrailer = async () => {
+            const response = await tmdbApi.getTrailer(id);
+            setTrailerLink(response);
+        }
         getDetail();
+        getTrailer();
     }, [id]);
 
     useEffect(()=>{
@@ -67,6 +73,16 @@ const DetallesPeli = () => {
                 nota = ratings.filter(e => e.Source === 'Metacritic')[0].Value
                 mostrar.push(<div className="calificaciones" style={{ marginRight:'1.5rem'}}><img className="imagenNota" src={metacriticLogo}/>{nota}</div>)
             }
+            if (trailerLink.results.length > 0) {
+                let linkVideo = "https://www.youtube.com/watch?v="+trailerLink.results[0].key
+                mostrar.push(
+                <div style={{ marginLeft:'2rem'}}>
+                    <button className="botonTrailer" onClick={()=>window.open(linkVideo, '_blank', 'noreferrer')}>
+                        <LocalMoviesIcon sx={{ color: "#fff" }}/>
+                        <text className="botonTrailer__text">Ver tráiler</text>
+                    </button>
+                </div >)
+            }
             if(downloadMagnet) 
                 mostrar.push(
                 <div style={{ marginLeft:'2rem'}}>
@@ -92,10 +108,11 @@ const DetallesPeli = () => {
                         <div className="movie-content__poster__img" style={{backgroundImage: `url(${"https://image.tmdb.org/t/p/original"+datosPeli.poster_path})`}}></div>
                     </div>
                     <div className="movie-content__info">
-                        
-                                <h1 className="title">
-                                    {datosPeli.title || datosPeli.name}
-                                </h1>
+                                <div className='titleContainer'>
+                                    <h1 className="title">
+                                        {datosPeli.title || datosPeli.name}
+                                    </h1>
+                                </div>
                                 <div className="genres">
                                     {
                                         datosPeli.genres && datosPeli.genres.slice(0, 5).map((genre, i) => (

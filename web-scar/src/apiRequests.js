@@ -23,7 +23,7 @@ axiosClient.interceptors.response.use((response) => {
 
 
 const tmdbApi = {
-    getVideos: (id) => {
+    getTrailer: (id) => {
         const url = 'movie/' + id + '/videos';
         return axiosClient.get(url, {params: {}});
     },
@@ -39,6 +39,7 @@ const tmdbApi = {
         const url = 'movie/' + id + '/similar';
         return axiosClient.get(url, {params: {}});
     },
+    
 }
 
 export default tmdbApi;

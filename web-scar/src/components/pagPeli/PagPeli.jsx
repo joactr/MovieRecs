@@ -38,7 +38,6 @@ const PagPeli = () => {
                 divs.push(createSet(sub_ids))
             }
         }
-        
         return(divs)
     }
     

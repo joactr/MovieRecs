@@ -50,25 +50,6 @@
             margin-bottom: 2rem;
         }
 
-        .title {
-            font-size: 4rem;
-            line-height: 1;
-        }
-
-        .genres {
-            & > * ~ * {
-                margin-left: 0.5rem;
-            }
-
-            &__item {
-                padding: 0.5rem 1.5rem;
-                border: 2px solid $white;
-                border-radius: $border-radius;
-                font-size: 0.8rem;
-                font-weight: 600;
-                background-color: $body-bg;
-            }
-        }
 
         .calificaciones {
             display: flex;
@@ -78,7 +59,35 @@
     }
 }
 
-.botonDescargar {
+.titleContainer{
+    display: inline-block;
+    background-color: rgba(12, 45, 72, 0.6); //body-bg pero con canal alpha suavizado
+    padding: 5px;
+    //border: 2px solid $white;
+    border-radius: 15px;
+
+    .title {
+        font-size: 4rem;
+        line-height: 1;
+    }
+}
+
+.genres {
+    & > * ~ * {
+        margin-left: 0.5rem;
+    }
+
+    &__item {
+        padding: 0.5rem 1.5rem;
+        border: 2px solid $white;
+        border-radius: $border-radius;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: rgba(12, 45, 72, 0.6); //body-bg pero con canal alpha suavizado
+    }
+}
+
+.botonDescargar, .botonTrailer {
         position: relative;
         display: flex;
         align-items: center;
@@ -94,8 +103,12 @@
     }
 }
 
-.botonDescargar:hover {
-    transform: scale(1.3);
+.botonTrailer {
+    background-color: $body-bg;
+}
+
+.botonDescargar:hover, .botonTrailer:hover {
+    transform: scale(1.2);
     cursor: pointer;
 }
 

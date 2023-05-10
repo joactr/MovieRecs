@@ -101,12 +101,16 @@ export default function SignUp() {
     };
     
     const handleRatings = (event) => {
-        event.preventDefault();
-        let auxArray = ratings
-        let numRating = event.target.name
-        console.log(numRating.slice(-2))
+      event.preventDefault();
+      let auxArray = ratings
+      let numRating = Number(event.target.name.slice(-2))
+      console.log(numRating)
+      let newRating = event.target.value
+      auxArray[numRating - 1] = Number(newRating)
+      setRatings(auxArray)
+      console.log(event.target.value, ratings)
 
-      };
+    };
 
     return (
         <div style={{ width: "100%", height: "100%", backgroundColor: "#0C2D48", top: "0", position: "absolute", backgroundImage: `url(${collage})` }}>
@@ -199,7 +203,7 @@ export default function SignUp() {
                 <Grid item xs={12}>
                     <div className='ratingsContainer'>
                         <div className='columnRatings'>
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Acción</Typography> 
                         <StyledRating
                         name="rating01"
                         IconContainerComponent={IconContainer}
@@ -207,7 +211,7 @@ export default function SignUp() {
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Aventura</Typography> 
                         <StyledRating
                         name="rating02"
                         IconContainerComponent={IconContainer}
@@ -215,33 +219,33 @@ export default function SignUp() {
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Animación</Typography> 
                         <StyledRating
-                        name="rating01"
+                        name="rating03"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Infantil</Typography> 
                         <StyledRating
-                        name="rating02"
+                        name="rating04"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Comedia</Typography> 
                         <StyledRating
-                        name="rating01"
+                        name="rating05"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Crimen</Typography> 
                         <StyledRating
-                        name="rating02"
+                        name="rating06"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
@@ -249,49 +253,49 @@ export default function SignUp() {
                         />
                         </div>
                         <div className='columnRatings'>
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Documental</Typography> 
                         <StyledRating
-                        name="rating01"
+                        name="rating07"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Drama</Typography> 
                         <StyledRating
-                        name="rating02"
+                        name="rating08"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Fantasía</Typography> 
                         <StyledRating
-                        name="rating01"
+                        name="rating09"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Cine negro</Typography> 
                         <StyledRating
-                        name="rating02"
+                        name="rating10"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Horror</Typography> 
                         <StyledRating
-                        name="rating01"
+                        name="rating11"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Musical</Typography> 
                         <StyledRating
-                        name="rating02"
+                        name="rating12"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
@@ -299,49 +303,49 @@ export default function SignUp() {
                         />
                         </div>
                         <div className='columnRatings'>
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Misterio</Typography> 
                         <StyledRating
-                        name="rating01"
+                        name="rating13"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Romance</Typography> 
                         <StyledRating
-                        name="rating02"
+                        name="rating14"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Ciencia Ficción</Typography> 
                         <StyledRating
-                        name="rating01"
+                        name="rating15"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Thriller</Typography> 
                         <StyledRating
-                        name="rating02"
+                        name="rating16"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Guerra</Typography> 
                         <StyledRating
-                        name="rating01"
+                        name="rating17"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Sign up</Typography> 
+                        <Typography color="secondary.main">Western</Typography> 
                         <StyledRating
-                        name="rating02"
+                        name="rating18"
                         IconContainerComponent={IconContainer}
                         getLabelText={(value) => customIcons[value].label}
                         highlightSelectedOnly
