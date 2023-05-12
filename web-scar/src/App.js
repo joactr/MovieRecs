@@ -1,5 +1,6 @@
 import './App.scss';
 import PagPeli from './components/pagPeli/PagPeli';
+import MisPelis from './components/pagPeli/MisPelis';
 import Nav from './components/nav/Nav';
 import Login from './components/login/Login';
 import PrivateRoutes from './components/privateRoute/PrivateRoutes';
@@ -23,8 +24,8 @@ function App() {
         <Nav/>
         <Routes>
           <Route element={<PrivateRoutes/>}>
-            <Route path='/' element={<label>Película test</label>} />
-            <Route path='/mis-pelis' element={<PagPeli />} />
+            <Route path='/mis-pelis' element={<MisPelis />} />
+            <Route path='/' element={<PagPeli />} />
             <Route path='/pelicula/:id' element={<DetallesPeli />} />
             <Route path='/config' element={<Config />} />
           </Route>

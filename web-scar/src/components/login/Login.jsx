@@ -38,9 +38,23 @@ export default function SignIn() {
     
     let username = data.get('username');
     let password = data.get('password');
-    
-    localStorage.setItem("username", username)
-    navigate("/");
+    let userData = JSON.stringify({username: username,password:password})
+    fetch("http://localhost:8080/logIn", { method: "POST", body: userData,headers: {
+      "Content-Type": "application/json",
+      }, },)
+      .then((res) => {
+        
+        if (res.ok) {
+          let datosRes = res.json().then(post => localStorage.setItem("user_id", post.user_id))
+          localStorage.setItem("username", data.get('username'))
+          localStorage.setItem("recomendador", [false, true, false])
+          localStorage.setItem("nRecs", 10)
+          navigate("/")
+        } else {
+          window.alert("Usuario o contraseña incorrectos")
+        }
+      }
+    )
     
   };
 

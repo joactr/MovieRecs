@@ -1,4 +1,5 @@
-import {React, useState,useEffect,Fragment} from 'react';
+import { React, useState, useEffect, Fragment } from 'react';
+import {json, useNavigate} from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -85,19 +86,40 @@ const StyledRating = styled(Rating)(({ theme }) => ({
   };
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [ratings, setRatings] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
-  const[age,setAge]=useState('')
+  const [age, setAge] = useState('')
+  const[genero,setGenero]=useState('')
   const[profesion,setProfesion]=useState('')
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    let userData = {
       username: data.get('username'),
       password: data.get('password'),
       age: age,
       profesion: profesion,
-    });
+      genero: genero,
+      preferences: ratings
+    }
+    userData = JSON.stringify(userData)
+    console.log(userData);
+    fetch("http://localhost:8080/registerUser", { method: "POST", body: userData,headers: {
+      "Content-Type": "application/json",
+      }, },)
+      .then((res) => {
+        if (res.ok) {
+          let datosRes = res.json().then(post => localStorage.setItem("user_id", post.user_id))
+          localStorage.setItem("username", data.get('username'))
+          localStorage.setItem("recomendador", [false, true, false])
+          localStorage.setItem("nRecs", 10)
+          navigate("/")
+        } else {
+          window.alert("Error")
+        }
+      }
+      )
     };
     
     const handleRatings = (event) => {
@@ -161,6 +183,23 @@ export default function SignUp() {
                   sx={{ bgcolor: "secondary.main" }}
                   variant="filled"
                 />
+                  </Grid>
+                  <Grid item xs={12} >
+                <FormControl fullWidth required variant="filled" sx={{ bgcolor: "secondary.main"}}>
+                    <InputLabel>Género</InputLabel>
+                    <Select
+                    id="genero"
+                    value={genero}
+                    required
+                    fullWidth
+                    onChange={(e)=>setGenero(e.target.value)}
+                    sx={{ bgcolor: "secondary.main"}}
+                    variant="filled"
+                    >
+                    <MenuItem value={"M"}>{"Hombre" }</MenuItem>
+                    <MenuItem value={"F"}>{"Mujer" }</MenuItem>
+                    </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} >
                 <FormControl fullWidth required variant="filled" sx={{ bgcolor: "secondary.main"}}>
@@ -177,7 +216,7 @@ export default function SignUp() {
                     <MenuItem value={20}>{"0 - 23" }</MenuItem>
                     <MenuItem value={30}>{"24 - 40" }</MenuItem>
                     <MenuItem value={50}>{"41 - 60" }</MenuItem>
-                    <MenuItem value={60}>{"61+" }</MenuItem>
+                    <MenuItem value={70}>{"61+" }</MenuItem>
                     </Select>
                 </FormControl>
               </Grid>
@@ -193,10 +232,11 @@ export default function SignUp() {
                     sx={{ bgcolor: "secondary.main" }}
                     variant="filled"
                     >
-                    <MenuItem value={20}>{"0 - 23" }</MenuItem>
-                    <MenuItem value={30}>{"24 - 40" }</MenuItem>
-                    <MenuItem value={50}>{"41 - 60" }</MenuItem>
-                    <MenuItem value={60}>{"61+" }</MenuItem>
+                    <MenuItem value={"doctor"}>{"Sanitario"}</MenuItem>
+                    <MenuItem value={"programmer"}>{"Tecnológico/Científico"}</MenuItem>
+                    <MenuItem value={"artist"}>{"Arte" }</MenuItem>
+                    <MenuItem value={"student"}>{"Desempleado/Jubilado/Estudiante" }</MenuItem>
+                    <MenuItem value={"marketing"}>{"Ventas/Leyes" }</MenuItem>
                     </Select>
                 </FormControl>
                 </Grid>

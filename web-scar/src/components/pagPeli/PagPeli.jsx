@@ -8,9 +8,16 @@ import tmdbApi from '../../apiRequests';
 
 const PagPeli = () => {
 
-    const[ids,setIds] = useState([])
+    const [ids, setIds] = useState([])
 
-    useEffect(()=>{fetch("http://localhost:8080/users")
+    useEffect(() => {
+        let tipoRecs = localStorage.getItem("recomendador")
+        tipoRecs = tipoRecs.split(",")
+        var demog = (tipoRecs[0] === 'true');
+        var conte = (tipoRecs[1] === 'true');
+        var colab = (tipoRecs[2] === 'true');
+        fetch("http://localhost:8080/getRecommendations?" + new URLSearchParams({
+            demog:demog,conte:conte,colab:colab,user:localStorage.getItem("user_id"),nRecs:localStorage.getItem("nRecs")}))
     .then((response) => response.json())  
 	.then((res) => setIds(res.ids))}
     ,[])
