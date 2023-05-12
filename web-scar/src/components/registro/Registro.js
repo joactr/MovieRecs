@@ -375,7 +375,7 @@ export default function SignUp() {
                         highlightSelectedOnly
                         onChange={handleRatings}
                         />
-                        <Typography color="secondary.main">Guerra</Typography> 
+                        <Typography color="secondary.main">Bélica</Typography> 
                         <StyledRating
                         name="rating17"
                         IconContainerComponent={IconContainer}
