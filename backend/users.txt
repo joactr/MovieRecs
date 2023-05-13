@@ -941,9 +941,9 @@
 941	20	M	student	941
 942	48	F	librarian	942
 943	22	M	student	943
-944	20	M	programmer	fulanito
-945	30	F	programmer	pepe
-946	30	F	programmer	pepe
-947	30	F	programmer	pepe
-948	30	F	programmer	pepe
-949	30	F	programmer	pepe
+944	50	M	student	ActionTom
+945	20	M	student	LilPeter
+946	50	M	student	WildJames
+947	30	M	artist	ReadingMary
+948	50	M	student	ActionThomas
+949	20	M	artist	RomanticJohn

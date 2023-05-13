@@ -1,9 +1,11 @@
 import numpy as np
+from random import shuffle
 import pandas as pd
 import requests
 from scipy.stats import pearsonr
 import tmdbsimple as tmdb
 from os.path import exists
+import os
 
 class Recomendador():
     """
@@ -79,16 +81,10 @@ class Recomendador():
         self.ratings = pd.read_csv(data_path+"/u1_base.txt", names=["user_id", "movie_id", "rating"], sep="\t")
         self.generos = pd.read_csv(data_path+"/genre.txt", names=["genre_id", "genre_name"], sep="\t")
         all_genre = self.generos.genre_name.values.tolist()
-        all_genre = ["movie_id"] + all_genre + ["title"]
+        all_genre = ["movie_id"] + all_genre + ["title"] + ["tmdb_id"]
         self.films_df = pd.read_csv(data_path+"/items.txt",encoding="iso-8859-1" ,names=all_genre, sep="\t")
-        if exists(data_path+"/films.txt"):
-            film_id_df = pd.read_csv(data_path+"/films.txt",encoding="iso-8859-1", sep="\t",names=["movie_id","tmdb_id"])
-            print(self.films_df.columns, film_id_df.columns)
-            self.films_df = self.films_df.merge(film_id_df,on="movie_id")
-        else:
-            film_id_df = self.preprocess_films()
-            self.films_df = self.films_df.merge(film_id_df,on="movie_id")
-        print(self.films_df)
+
+        
 
     def save_data(self, path='.'):
         self.users_df.to_csv(path+'/users.txt', header=None, index=None, sep='\t', mode='w')
@@ -195,8 +191,13 @@ class Recomendador():
         -------
         None
         """
+        self.grupos_demograficos = {}
+        for user_id in self.users_df.user_id.unique().tolist():
+            user = self.users_df[self.users_df.user_id == user_id]
+            user_demo_group = self.get_user_type(user.gender.tolist()[0], user.age.tolist()[0], user.occupation.tolist()[0])
+            self.grupos_demograficos[user_id] = user_demo_group
 
-        def get_user_type(gender, age, occupation):
+    def get_user_type(self,gender, age, occupation):
             res = 0
             group1 = ['doctor', 'healthcare', 'entertainment']
             group2 = ['engineer', 'programmer', 'scientist', 'technician']
@@ -252,12 +253,6 @@ class Recomendador():
 
             return res - 1 if res > 9 else res
 
-        self.grupos_demograficos = {}
-        for user_id in self.users_df.user_id.unique().tolist():
-            user = self.users_df[self.users_df.user_id == user_id]
-            user_demo_group = get_user_type(user.gender.tolist()[0], user.age.tolist()[0], user.occupation.tolist()[0])
-            self.grupos_demograficos[user_id] = user_demo_group
-
     def get_pref(self):
         res = []
         for u in self.ratings.user_id.unique().tolist():
@@ -302,14 +297,14 @@ class Recomendador():
         """
         self.preferencias_coop = np.load(path)['a'] if path != "" else self.get_pref()
         self.pref_dg = np.load(path_dg)['a'] if path_dg != "" else self.get_dg_pref()
-        self.pref_hyb = np.load(path_hyb)['a'] if path_hyb != "" else self.get_hyb_pref()
+        #self.pref_hyb = np.load(path_hyb)['a'] if path_hyb != "" else self.get_hyb_pref()
 
         self.save_preferencias()
-        self.preferencias_coop = np.load('../data/preferencias.npz')['a']
-        self.pref_dg = np.load('../data/preferencias_demografico.npz')['a']
-        self.pref_hyb = np.load('../data/preferencias_hibrido.npz')['a']
+        self.preferencias_coop = np.load(path)['a']
+        self.pref_dg = np.load(path_dg)['a']
+        #self.pref_hyb = np.load('../data/preferencias_hibrido.npz')['a']
         
-    def save_preferencias(self, path="../data") -> None:
+    def save_preferencias(self, path=".") -> None:
         """Guarda las matrices de preferencias en sus respectivos archivos
         Parameters
         ----------
@@ -328,8 +323,11 @@ class Recomendador():
         return len(self.ratings[(self.ratings.user_id.isin(usuarios)) & (self.ratings.movie_id == movie_id)].index), self.ratings[(self.ratings.user_id.isin(usuarios)) & (self.ratings.movie_id == movie_id)].mean()['rating'], self.ratings[self.ratings.movie_id == movie_id].mean()['rating']
 
     def save_user_pref(self,user, user_pref) -> None:
+        print(np.asarray(user_pref))
+        print(self.preferencias_coop[-1])
         if user > self.preferencias_coop.shape[0]:
             self.preferencias_coop = np.append(self.preferencias_coop, [user_pref], axis=0)
+            self.save_preferencias()
         else:
             self.preferencias_coop[user-1,:] = user_pref
 
@@ -385,9 +383,9 @@ class Recomendador():
     def obtener_vecinos(self, preferencias, user, k=1) -> tuple:
         vecinos = [0]*k
         vecinos_score = [0]*k
-        pref = preferencias[user]
+        pref = preferencias[user-1]
         for i in range(0, preferencias.shape[0]):
-            if i == user:
+            if i+1 == user:
                 continue
             score = pearsonr(pref, preferencias[i])[0]
             if score > min(vecinos_score):
@@ -395,9 +393,6 @@ class Recomendador():
                 vecinos_score[vecinos_score.index(min(vecinos_score))] = score
                 
         res = (vecinos, vecinos_score)
-        vecinos2, vecinos_score2 = [], []
-        for _ in res[0]:
-            max_val = vecinos.index(max(vecinos_score))
         return vecinos, vecinos_score
 
     def obtener_recomendacion_cooperativa(self, user, n) -> list:
@@ -411,10 +406,26 @@ class Recomendador():
         list
             Lista con los ids de las películas
         """
-        vecino = self.obtener_vecinos(self.preferencias_coop, 0, 1)
+        vecino = self.obtener_vecinos(self.preferencias_coop, user, 1)
+        print(vecino)
         pelis_user = self.ratings[self.ratings.user_id == user]['movie_id'].tolist()
         pelis_vecino = self.ratings[self.ratings.user_id == vecino[0][0]][['movie_id', 'rating']].sort_values(by=['rating'], ascending=False)['movie_id'].tolist()
-        return [x for x in pelis_vecino if x not in pelis_user][:n]
+        return [[self.tmdb_id(x), np.linalg.norm(self.preferencias_coop[user-1] - self.films_df[self.films_df["movie_id"]==x].iloc[:,1:20])/6] for x in pelis_vecino if x not in pelis_user][:n]
+    
+    def obtener_recomendacion_contenido(self, user, n) -> list:
+        """Obtiene películas recomendadas para un usuario por contenido
+        Parameters
+        ----------
+        user : int
+            Id del usuario
+        Returns
+        -------
+        list
+            Lista con los ids de las películas
+        """
+        userPrefs = self.preferencias_coop[user-1]/5
+        res = self.films_df.iloc[:, [i + 1 for i in self.generos.loc[np.argpartition(userPrefs, -(userPrefs.nonzero()[0].shape[0]))[-(userPrefs.nonzero()[0].shape[0]):]]['genre_id'].tolist()]].sum(axis=1).sort_values(ascending=False).keys()
+        return [[self.tmdb_id(x+1), np.linalg.norm(self.preferencias_coop[user-1] - self.films_df[self.films_df["movie_id"]==x+1].iloc[:,1:20])] for x in res[:n]]
 
     def obtener_recomendacion_dg(self, user, n) -> list:
         """Obtiene películas recomendadas por grupo demográfico para un usuario
@@ -434,24 +445,39 @@ class Recomendador():
         grupo = self.grupos_demograficos[user]
         vecino = self.obtener_vecinos(self.pref_dg, grupo, 1)
         pelis_user = self.ratings[self.ratings.user_id == user]['movie_id'].tolist()
-        pelis_vecino = self.ratings[self.ratings.user_id == vecino[0][0]][['movie_id', 'rating']].sort_values(by=['rating'], ascending=False)['movie_id'].tolist()
-        return [x for x in pelis_vecino if x not in pelis_user][:n]
+        pelis_dict = self.ratings[self.ratings.user_id == vecino[0][0]][['movie_id', 'rating']].sort_values(by=['rating'], ascending=False)#
+        pelis_vecino = pelis_dict['movie_id'].tolist()
+        scores = pelis_dict['rating'].tolist()
+        res = [[self.tmdb_id(x),np.linalg.norm(self.films_df[self.films_df["movie_id"]==x].iloc[:,1:20]-self.pref_dg[grupo-1])/6] for x in pelis_vecino if x not in pelis_user][:n]
+        res.sort(key = lambda x: x[1],reverse=True )
+        return res
     
-    def obtener_recomendacion_hyb(self, user, n) -> list:
+    def obtener_recomendacion_hyb(self, user, recomendadores, n) -> list:
         """Obtiene películas recomendadas de modo híbrido para un usuario
         Parameters
         ----------
         user : int
             Id del usuario
+        recomendadores : list
+            lista de recomendadores a usar
+        n : int
+            numero de peliculas a recomendar
         Returns
         -------
         list
             Lista con los ids de las películas
         """
-        vecino = self.obtener_vecinos(self.pref_hyb, 0, 1)
-        pelis_user = self.ratings[self.ratings.user_id == user]['movie_id'].tolist()
-        pelis_vecino = self.ratings[self.ratings.user_id == vecino[0][0]][['movie_id', 'rating']].sort_values(by=['rating'], ascending=False)['movie_id'].tolist()
-        return [x for x in pelis_vecino if x not in pelis_user][:n]
+        res = []
+        if recomendadores[0]:
+            res += [i for i in self.obtener_recomendacion_cooperativa(user, int(n/2))]
+        if recomendadores[1]:
+            res += [i for i in self.obtener_recomendacion_contenido(user, int(n/2))]
+        if recomendadores[2]:
+            res += [i for i in self.obtener_recomendacion_dg(user, int(n/2))]
+        
+        res.sort(key=lambda x: x[1], reverse=True)
+
+        return res[:n]
 
     def get_dg_pref(self) -> np.matrix:
         res = []
@@ -507,6 +533,16 @@ class Recomendador():
             d.append((p, self.get_film_id(p)))
 
         res = pd.DataFrame(d, columns=('movie_id', 'tmdb_id'))
-        res.to_csv('./films.txt', index=None, sep='\t', mode='w')
+        res.to_csv('./films.txt',header=None, index=None, sep='\t', mode='w')
         return res
+    
+    def save_all_neighbours(self):
+        for i in self.users_df["user_id"].to_list():
+            self.save_user_neighbours(i)
         
+    def save_user_neighbours(self, user) -> None:
+        if not os.path.exists('./usuarios/'+str(user)):
+            os.makedirs('./usuarios/'+str(user))
+        vecinos, vecinos_score = self.obtener_vecinos(self.preferencias_coop, user, self.preferencias_coop.shape[0]-1)
+        aux = pd.DataFrame({'vecino':vecinos, 'afinidad':vecinos_score})
+        aux.to_csv('./usuarios/'+str(user)+'/vecinos.txt', header=None, index=None, sep='\t', mode='w')

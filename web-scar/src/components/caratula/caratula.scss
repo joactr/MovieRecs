@@ -7,7 +7,7 @@
     background-size: contain;
     border-radius: $border-radius;
     margin-bottom: 0.15rem;
-    height: 15rem;
+    height: 40vh;
 
     &::before {
         content: "";
@@ -19,7 +19,7 @@
         background-color: $black;
         opacity: 0;
         transition: opacity 0.3s ease;
-        border-radius: $border-radius;
+        border-radius: 25px;
     }
 
     &:hover::before {
@@ -30,7 +30,7 @@
 .movie-container{
     display: block;
     margin: auto;
-    margin-top:10%;
-    width: 10rem;
+    margin-top:4%;
+    width: 15.5rem;
     text-align: center;
 }

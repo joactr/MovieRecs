@@ -95,13 +95,15 @@ export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    let newRatings = ratings
+    newRatings.unshift(0)
     let userData = {
       username: data.get('username'),
       password: data.get('password'),
       age: age,
       profesion: profesion,
       genero: genero,
-      preferences: ratings
+      preferences: newRatings
     }
     userData = JSON.stringify(userData)
     console.log(userData);

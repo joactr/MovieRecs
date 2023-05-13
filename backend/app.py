@@ -8,6 +8,9 @@ import random
 from recomendador import Recomendador
 
 recom = Recomendador(data_path='./')
+recom.load_grupos_demograficos()
+recom.load_preferencias(path="./preferencias.npz",path_dg="./preferencias_demografico.npz")
+#recom.save_all_neighbours()
 torrents = py1337x(proxy='1337x.to', cache='py1337xCache', cacheTime=500)
 app = Flask(__name__)
 CORS(app)
@@ -33,10 +36,14 @@ def downloadMovie():
 @app.route('/registerUser',methods=["POST"])
 def registerUser():
     reqData = request.get_json()
-    print(reqData)
+    print(reqData["preferences"])
     recom.register_user(reqData["age"], reqData["genero"], reqData["profesion"], reqData["username"])
     uid = recom.get_username_id(reqData["username"])
-    print(uid)
+    recom.save_user_pref(uid,reqData["preferences"])
+    recom.obtener_vecinos(recom.preferencias_coop,uid,200)
+    recom.save_user_neighbours(uid)
+    recom.grupos_demograficos[uid] = recom.get_user_type(reqData["genero"], reqData["age"], reqData["profesion"])
+    print(recom.grupos_demograficos)
     return flask.jsonify({"user_id":uid})
 
 @app.route('/logIn',methods=["POST"])
@@ -64,21 +71,21 @@ def getRecommendations():
     demog = args["demog"][0] == "true"
     conte = args["conte"][0] == "true"
     colab = args["colab"][0] == "true"
-    nRecs = args["nRecs"]
-    uid = args["user"][0]
+    nRecs = int(args["nRecs"][0])
+    uid = int(args["user"][0])
     print(nRecs,uid)
-    if demog and not conte and not colab: #demografica
-        print("demog")
-    elif not demog and conte and not colab: #contenido
-        print("conte")
-    elif not demog and not conte and colab: #colaborativa
-        print("colab")
-    elif not demog and not conte and not colab: #ninguna
-        print("none")
-    else: #Hibrido
-        print("hibrido")
 
-    return "hola"
+    recs = []
+    if demog and not conte and not colab: #demografica
+        return flask.jsonify({"recs":recom.obtener_recomendacion_dg(uid,nRecs)})
+    elif not demog and conte and not colab: #contenido
+        return flask.jsonify({"recs":recom.obtener_recomendacion_contenido(uid,nRecs)})
+    elif not demog and not conte and colab: #colaborativa
+        return flask.jsonify({"recs":recom.obtener_recomendacion_cooperativa(uid,nRecs)})
+    elif not demog and not conte and not colab: #ninguna
+        return flask.jsonify({"recs":[[],[]]})
+    else: #Hibrido
+        return flask.jsonify({"recs":recom.obtener_recomendacion_hyb(uid,[colab,conte,demog],nRecs)})
 
 if __name__ == "__main__":
     app.run("localhost", 8080)
