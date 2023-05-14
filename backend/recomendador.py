@@ -445,9 +445,9 @@ class Recomendador():
         grupo = self.grupos_demograficos[user]
         vecino = self.obtener_vecinos(self.pref_dg, grupo, 1)
         pelis_user = self.ratings[self.ratings.user_id == user]['movie_id'].tolist()
-        pelis_dict = self.ratings[self.ratings.user_id == vecino[0][0]][['movie_id', 'rating']].sort_values(by=['rating'], ascending=False)#
+        vecinos = [k for k,v in self.grupos_demograficos.items() if v == vecino[0][0] - 1 and k != user]
+        pelis_dict = self.ratings[self.ratings.user_id.isin(vecinos)][['movie_id', 'rating']].sort_values(by=['rating'], ascending=False)
         pelis_vecino = pelis_dict['movie_id'].tolist()
-        scores = pelis_dict['rating'].tolist()
         res = [[self.tmdb_id(x),np.linalg.norm(self.films_df[self.films_df["movie_id"]==x].iloc[:,1:20]-self.pref_dg[grupo-1])/6] for x in pelis_vecino if x not in pelis_user][:n]
         res.sort(key = lambda x: x[1],reverse=True )
         return res
