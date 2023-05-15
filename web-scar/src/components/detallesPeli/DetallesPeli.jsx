@@ -2,7 +2,7 @@ import {React, useState,useEffect,Fragment} from 'react';
 import { useParams } from 'react-router';
 import tmdbApi from '../../apiRequests';
 import omdbApi from '../../omdbApi';
-import CastList from './reparto';
+import Reparto from './reparto';
 import './detallesPeli.scss';
 import rotten from './Rotten_Tomatoes.png';
 import imdbLogo from './imdb.png';
@@ -42,14 +42,14 @@ const DetallesPeli = () => {
 
     useEffect(()=>{
         if(datosomdb){
-                fetch("http://localhost:8080/downloadMovie?"+ new URLSearchParams({
-                movieName: datosomdb.Title+" "+datosomdb.Year}))
+                fetch("http://localhost:8080/downloadPeli?"+ new URLSearchParams({
+                peliName: datosomdb.Title+" "+datosomdb.Year}))
             .then((response) => response.json())  
             .then((res) => setDownloadMagnet(res.magnetLink))
         }
     },[datosomdb])
 
-    function downloadMovie(){
+    function downloadPeli(){
         if(downloadMagnet){
             window.location.replace(downloadMagnet)
         }
@@ -61,8 +61,8 @@ const DetallesPeli = () => {
             let nota = 0
             let mostrar = []
             
-            if(ratings.filter(e => e.Source === 'Internet Movie Database').length > 0){
-                nota = ratings.filter(e => e.Source === 'Internet Movie Database')[0].Value
+            if(ratings.filter(e => e.Source === 'Internet Peli Database').length > 0){
+                nota = ratings.filter(e => e.Source === 'Internet Peli Database')[0].Value
                 mostrar.push(<div className="calificaciones" style={{ marginRight:'1.5rem'}}><img className="imagenNota" src={imdbLogo}/>{nota}</div>)
             }
             if(ratings.filter(e => e.Source === 'Rotten Tomatoes').length > 0){
@@ -86,7 +86,7 @@ const DetallesPeli = () => {
             if(downloadMagnet) 
                 mostrar.push(
                 <div style={{ marginLeft:'2rem'}}>
-                    <button className="botonDescargar" onClick={()=>downloadMovie()}>
+                    <button className="botonDescargar" onClick={()=>downloadPeli()}>
                         <DownloadIcon sx={{ color: "#fff" }}/>
                         <text className="botonDescargar__text">Descargar</text>
                     </button>
@@ -102,12 +102,12 @@ const DetallesPeli = () => {
     return(
         datosPeli &&(<Fragment>
              
-                <div className="backgroundMovie" style={{backgroundImage: `url(${"https://image.tmdb.org/t/p/original"+datosPeli.backdrop_path})`}}/>
-                <div className="movie-content">
-                    <div className="movie-content__poster">
-                        <div className="movie-content__poster__img" style={{backgroundImage: `url(${"https://image.tmdb.org/t/p/original"+datosPeli.poster_path})`}}></div>
+                <div className="backgroundPeli" style={{backgroundImage: `url(${"https://image.tmdb.org/t/p/original"+datosPeli.backdrop_path})`}}/>
+                <div className="peli-content">
+                    <div className="peli-content__poster">
+                        <div className="peli-content__poster__img" style={{backgroundImage: `url(${"https://image.tmdb.org/t/p/original"+datosPeli.poster_path})`}}></div>
                     </div>
-                    <div className="movie-content__info">
+                    <div className="peli-content__info">
                                 <div className='titleContainer'>
                                     <h1 className="title">
                                         {datosPeli.title || datosPeli.name}
@@ -128,7 +128,7 @@ const DetallesPeli = () => {
                                     <div className="section__header">
                                         <h2>Reparto</h2>
                                     </div>
-                                    <CastList id={datosPeli.id}/>
+                                    <Reparto id={datosPeli.id}/>
                                 </div>
                     </div>
 

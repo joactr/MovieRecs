@@ -81,7 +81,7 @@ def getRecommendations():
     elif not demog and conte and not colab: #contenido
         return flask.jsonify({"recs":recom.obtener_recomendacion_contenido(uid,nRecs)})
     elif not demog and not conte and colab: #colaborativa
-        return flask.jsonify({"recs":recom.obtener_recomendacion_cooperativa(uid,nRecs)})
+        return flask.jsonify({"recs":recom.obtener_recomendacion_colaborativa(uid,nRecs)})
     elif not demog and not conte and not colab: #ninguna
         return flask.jsonify({"recs":[[],[]]})
     else: #Hibrido

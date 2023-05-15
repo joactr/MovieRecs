@@ -947,3 +947,4 @@
 947	30	M	artist	ReadingMary
 948	50	M	student	ActionThomas
 949	20	M	artist	RomanticJohn
+950	20	M	doctor	FunnyHolmes
